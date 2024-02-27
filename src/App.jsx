@@ -12,6 +12,7 @@ const lightblue = '#99dfff';
 const yellow = '#ffee58';
 const lightyellow = '#ffffa3';
 const green = '#66bb6a';
+const lightgreen = '#ccff90';
 
 const [tree, setTree] = useState(createTree());
 
@@ -119,6 +120,8 @@ const getStatusColor = (child) => {
     return lightblue;
   }
 
+  
+
   if((partialChildrenOnHold || areAllOnHold) && (processedAndSent || allProcessed)) {
     return blue;
   }
@@ -126,6 +129,13 @@ const getStatusColor = (child) => {
   if(allMixed) {
     return green;
   }
+
+  if(processedAndSent || sentAndPlanned) {
+    
+    return lightgreen;
+  }
+
+  
   return 'white';
 
 };

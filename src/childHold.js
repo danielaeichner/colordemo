@@ -352,9 +352,16 @@ export function setHoldStatus(tree, setTree) {
         const allPlanned = list.every((item) => item.fileStatus === 'Planned' ? true : false);
         const allProcessed = list.every((item) => item.fileStatus === 'Processed' ? true : false);
         const allSent = list.every((item) => item.fileStatus === 'Sent' ? true : false);
-        const processedAndSent = list.every((item) => item.fileStatus === 'Processed' || item.fileStatus === 'Sent' ? true : false);
-        const processedAndPlanned = list.every((item) => item.fileStatus === 'Processed' || item.fileStatus === 'Planned' ? true : false);
-        const sentAndPlanned = list.every((item) => item.fileStatus === 'Sent' || item.fileStatus === 'Planned' ? true : false);
+        
+        const processedAndSent = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
+        list.some((item) => item.fileStatus === 'Processed' ? true : false);
+
+        const processedAndPlanned = list.some((item) => item.fileStatus === 'Processed' ? true : false) && 
+        list.some((item) => item.fileStatus === 'Planned' ? true : false);
+
+        const sentAndPlanned = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
+        list.some((item) => item.fileStatus === 'Planned' ? true : false);
+        
         const allMixed = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
         list.some((item) => item.fileStatus === 'Processed' ? true : false) && 
         list.some((item) => item.fileStatus === 'Planned' ? true : false);

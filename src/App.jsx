@@ -7,7 +7,11 @@ import { createTree} from "./createTree";
 function App() {
   const [list, setList] = useState([]);
 
-
+const blue = '#29b6f6';
+const lightblue = '#99dfff';
+const yellow = '#ffee58';
+const lightyellow = '#ffffa3';
+const green = '#66bb6a';
 
 const [tree, setTree] = useState(createTree());
 
@@ -72,18 +76,18 @@ const [tree, setTree] = useState(createTree());
 
 const getStatusColorSingle = (onHold,  status, parentHold ) => {
   if(status === 'Sent') {
-    return 'green';
+    return green;
   }
   if(status === 'Error') {
     return 'red';
   }
 
   if(status === 'Processed' && (onHold || parentHold)) {
-    return 'blue';
+    return blue;
   }
 
   if(status === 'Planned' && (onHold || parentHold)) {
-    return 'yellow';
+    return yellow;
   }
 };
 
@@ -102,25 +106,25 @@ const getStatusColor = (child) => {
 
   
   if(allSent) {
-    return 'green';
+    return green;
   }
 
   if(partialChildrenOnHold && (allPlanned ||sentAndPlanned)) {
-    return 'lightyellow';
+    return lightyellow;
   }
   if((areAllOnHold || onHold) && (allPlanned || sentAndPlanned)) {
-    return 'yellow';
+    return yellow;
   }
   if((partialChildrenOnHold || areAllOnHold || onHold) && (allMixed || processedAndPlanned)) {
-    return 'lightblue';
+    return lightblue;
   }
 
   if((partialChildrenOnHold || areAllOnHold) && (processedAndSent || allProcessed)) {
-    return 'blue';
+    return blue;
   }
 
   if(allMixed) {
-    return 'lightgreen';
+    return green;
   }
   return 'white';
 

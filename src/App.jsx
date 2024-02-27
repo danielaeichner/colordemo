@@ -105,7 +105,11 @@ const getStatusColor = (child) => {
     sentAndPlanned,
     allMixed} = child;
 
-  
+  // if(child.id === "4") {
+  //   console.log(child);
+  // }
+
+
   if(allSent) {
     return green;
   }
@@ -126,8 +130,8 @@ const getStatusColor = (child) => {
     return blue;
   }
 
-  if(allMixed) {
-    return green;
+  if(allMixed && !partialChildrenOnHold && !areAllOnHold && !onHold) {
+    return 'white';
   }
 
   if(processedAndSent || sentAndPlanned) {

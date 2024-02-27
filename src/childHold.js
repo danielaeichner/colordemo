@@ -354,13 +354,13 @@ export function setHoldStatus(tree, setTree) {
         const allSent = list.every((item) => item.fileStatus === 'Sent' ? true : false);
         
         const processedAndSent = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
-        list.some((item) => item.fileStatus === 'Processed' ? true : false);
+        list.some((item) => item.fileStatus === 'Processed' ? true : false) && list.every((item) => item.fileStatus !== 'Planned'? true : false);
 
         const processedAndPlanned = list.some((item) => item.fileStatus === 'Processed' ? true : false) && 
-        list.some((item) => item.fileStatus === 'Planned' ? true : false);
+        list.some((item) => item.fileStatus === 'Planned' ? true : false) && list.every((item) => item.fileStatus !== 'Sent'? true : false);
 
         const sentAndPlanned = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
-        list.some((item) => item.fileStatus === 'Planned' ? true : false);
+        list.some((item) => item.fileStatus === 'Planned' ? true : false) && list.every((item) => item.fileStatus !== 'Processed'? true : false);
         
         const allMixed = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
         list.some((item) => item.fileStatus === 'Processed' ? true : false) && 

@@ -1,0 +1,34 @@
+#root {
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+h1 {
+  font-size: 1em;
+}
+
+li {
+  display: block;
+  margin-bottom: 0.5rem;
+  
+}
+
+li >span {
+  border: 1px solid #ccc;
+  
+  display: block;
+  text-align: left;
+  padding: 0.5rem;
+}
+
+.fileList {
+  display: block;
+  float: left;
+}
+
+.leftTree {
+  float: left;
+  display: block;
+}

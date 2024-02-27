@@ -6,7 +6,7 @@ return{
   id: "1",
   children: [
     {
-      name: "TEST National",
+      name: "National",
       id: "2",
       children: [
         {
@@ -22,22 +22,22 @@ return{
                   id: "5",
                   list: [
                     {
-                      name: "022324 - TEST National -  EARLY NY - E1 - C - 01",
+                      name: "National -  EARLY NY - E1 - C - 01",
                       id: "6",
                       fileStatus: "Processed",
                     },
                     {
-                      name: "022324 - TEST National -  EARLY NY - E1 - C - 02",
+                      name: "National -  EARLY NY - E1 - C - 02",
                       id: "7",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  EARLY NY - E1 - C - 03",
+                      name: "National -  EARLY NY - E1 - C - 03",
                       id: "8",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  EARLY NY - E1 - C - 04",
+                      name: "National -  EARLY NY - E1 - C - 04",
                       id: "9",
                       fileStatus: "Planned",
                     },
@@ -48,22 +48,22 @@ return{
                   id: "10",
                   list: [
                     {
-                      name: "022324 - TEST National -  EARLY NY - E1 - D - 01",
+                      name: "National -  EARLY NY - E1 - D - 01",
                       id: "11",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  EARLY NY - E1 - D - 02",
+                      name: "National -  EARLY NY - E1 - D - 02",
                       id: "12",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  EARLY NY - E1 - D - 03",
+                      name: "National -  EARLY NY - E1 - D - 03",
                       id: "13",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  EARLY NY - E1 - D - 04",
+                      name: "National -  EARLY NY - E1 - D - 04",
                       id: "14",
                       fileStatus: "Planned",
                     },
@@ -86,22 +86,22 @@ return{
                   id: "17",
                   list: [
                     {
-                      name: "022324 - TEST National -  LATE NY E1 - E1 - A - 01",
+                      name: "National -  LATE NY E1 - E1 - A - 01",
                       id: "18",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  LATE NY E1 - E1 - A - 02",
+                      name: "National -  LATE NY E1 - E1 - A - 02",
                       id: "19",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  LATE NY E1 - E1 - A - 03",
+                      name: "National -  LATE NY E1 - E1 - A - 03",
                       id: "20",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  LATE NY E1 - E1 - A - 04",
+                      name: "National -  LATE NY E1 - E1 - A - 04",
                       id: "21",
                       fileStatus: "Planned",
                     },
@@ -112,22 +112,22 @@ return{
                   id: "22",
                   list: [
                     {
-                      name: "022324 - TEST National -  LATE NY E1 - E1 - B - 01",
+                      name: "National -  LATE NY E1 - E1 - B - 01",
                       id: "23",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  LATE NY E1 - E1 - B - 02",
+                      name: "National -  LATE NY E1 - E1 - B - 02",
                       id: "24",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  LATE NY E1 - E1 - B - 03",
+                      name: "National -  LATE NY E1 - E1 - B - 03",
                       id: "25",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  LATE NY E1 - E1 - B - 04",
+                      name: "National -  LATE NY E1 - E1 - B - 04",
                       id: "26",
                       fileStatus: "Planned",
                     },
@@ -138,7 +138,7 @@ return{
           ],
         },
         {
-          name: "Master Daily TEST",
+          name: "Master Daily ",
           id: "27",
           children: [
             {
@@ -150,22 +150,22 @@ return{
                   id: "29",
                   list: [
                     {
-                      name: "022324 - TEST National -  Master Daily TEST - E1 - A - 01",
+                      name: "National -  Master Daily - E1 - A - 01",
                       id: "30",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  Master Daily TEST - E1 - A - 02",
+                      name: "National -  Master Daily - E1 - A - 02",
                       id: "31",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  Master Daily TEST - E1 - A - 03",
+                      name: "National -  Master Daily - E1 - A - 03",
                       id: "32",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  Master Daily TEST - E1 - A - 04",
+                      name: "National -  Master Daily - E1 - A - 04",
                       id: "33",
                       fileStatus: "Planned",
                     },
@@ -176,7 +176,7 @@ return{
           ],
         },
         {
-          name: "Master Daily TEST PDF_PDF",
+          name: "Master Daily PDF_PDF",
           id: "34",
           children: [
             {
@@ -188,22 +188,22 @@ return{
                   id: "36",
                   list: [
                     {
-                      name: "022324 - TEST National -  Master Daily TEST PDF_PDF - E1 - A - 01",
+                      name: "National -  Master Daily PDF_PDF - E1 - A - 01",
                       id: "37",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  Master Daily TEST PDF_PDF - E1 - A - 02",
+                      name: "National -  Master Daily PDF_PDF - E1 - A - 02",
                       id: "38",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  Master Daily TEST PDF_PDF - E1 - A - 03",
+                      name: "National -  Master Daily PDF_PDF - E1 - A - 03",
                       id: "39",
                       fileStatus: "Planned",
                     },
                     {
-                      name: "022324 - TEST National -  Master Daily TEST PDF_PDF - E1 - A - 04",
+                      name: "National -  Master Daily PDF_PDF - E1 - A - 04",
                       id: "40",
                       fileStatus: "Planned",
                     },

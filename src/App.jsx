@@ -16,7 +16,7 @@ const lightyellow = 'rgb(255, 235, 20, 0.3)';
 const greenyellow = 'rgb(188, 255, 20, 0.5)';
 
 const green = 'rgb(124, 179, 66)';
-const lightgreen = 'rgb(124, 179, 66, 0.3)';
+const lightgreen = 'rgb(124, 179, 66, 0.1)';
 
 const colors = [ {name: "Blue", color: blue},
 {name: "Light Blue", color: lightblue},

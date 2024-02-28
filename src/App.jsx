@@ -7,12 +7,25 @@ import { createTree} from "./createTree";
 function App() {
   const [list, setList] = useState([]);
 
-const blue = '#29b6f6';
-const lightblue = '#99dfff';
-const yellow = '#ffee58';
-const lightyellow = '#ffffa3';
-const green = '#66bb6a';
-const lightgreen = '#ccff90';
+const blue = 'rgb(3, 155, 229)';
+const lightblue = 'rgb(3, 155, 229, 0.3)';
+
+const yellow = 'rgb(255, 235, 20)';
+const lightyellow = 'rgb(255, 235, 20, 0.3)';
+
+const greenyellow = 'rgb(188, 255, 20, 0.5)';
+
+const green = 'rgb(124, 179, 66)';
+const lightgreen = 'rgb(124, 179, 66, 0.3)';
+
+const colors = [ {name: "Blue", color: blue},
+{name: "Light Blue", color: lightblue},
+{name: "Yellow", color: yellow},
+{name: "Light Yellow", color: lightyellow},
+{name: "Green Yellow", color: greenyellow},
+{name: "Green", color: green},
+{name: "Light Green", color: lightgreen}]; 
+
 
 const [tree, setTree] = useState(createTree());
 
@@ -109,6 +122,10 @@ const getStatusColor = (child) => {
   //   console.log(child);
   // }
 
+   
+  if(allSent && (areAllOnHold || partialChildrenOnHold)) {
+    return greenyellow;
+  }
 
   if(allSent) {
     return green;
@@ -219,11 +236,28 @@ const changeStatus = (id, status) => {
     );
   };
 
+  const renderBoxes = () => {
+    return (
+      <div className="boxContainer">
+        {colors.map((color, index) => (
+          <div style={{float: "left", margin: "2rem" }} key={index}>
+          <div  className="box" style={{ backgroundColor: color.color, width: "20px", height: "20px", margin: "10px" }}></div>
+
+            <span>{color.name}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <>
       <h1>STX Status Colors</h1>
 
-      <div className="container">
+      {renderBoxes()}
+    
+      <div className="container" style={{clear: "both"}}>
+      
         <div className="leftTree">{renderTree(tree)}</div>
         <div className="fileList">
           <ul>

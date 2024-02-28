@@ -89,6 +89,10 @@ const [tree, setTree] = useState(createTree());
 
 
 const getStatusColorSingle = (onHold,  status, parentHold ) => {
+  if(status === 'Sent' && (onHold || parentHold)) {
+    return greenyellow;
+  }
+
   if(status === 'Sent') {
     return green;
   }

@@ -151,16 +151,14 @@ const getStatusColor = (child) => {
     return blue;
   }
 
-  if(allMixed && !partialChildrenOnHold && !areAllOnHold && !onHold) {
+  if(!partialChildrenOnHold && !areAllOnHold && !onHold) {
+    if(allMixed || processedAndSent || sentAndPlanned) { 
+    
+      return lightgreen;
+    }
     return 'white';
   }
 
-  if(processedAndSent || sentAndPlanned) {
-    
-    return lightgreen;
-  }
-
-  
   return 'white';
 
 };

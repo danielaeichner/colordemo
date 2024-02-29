@@ -125,7 +125,8 @@ function App() {
           {child.parentHold ? " - parentHold" : ""}
           {child.areAllOnHold ? " - areAllOnHold" : ""}
           {child.partialChildrenOnHold ? " - partialChildrenOnHold" : ""}
-          {child.hasProcessedOnHoldFile ? " - hasProcessedOnHoldFile" : ""} */}
+          {child.hasProcessedOnHoldFile ? " - hasProcessedOnHoldFile" : ""}
+          {child.processedAndPlanned ? " - processedAndPlanned" : ""} */}
         </span>
         <button onClick={() => toggleOnHold(child.id)}>
           {child.onHold ? "Unhold" : "Hold"}

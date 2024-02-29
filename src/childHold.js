@@ -355,8 +355,11 @@ export function setHoldStatus(tree, setTree) {
         const allProcessed = list.every((item) => item.fileStatus === 'Processed' ? true : false);
         const allSent = list.every((item) => item.fileStatus === 'Sent' ? true : false);
         const childHold = list.some((item) => item.childHold ? true : false);
+if(partialTree.id === "16") {
 
-        const hasProcessedOnHoldFile = list.some((item) => item.fileStatus === 'Processed' && item.onHold ? true : false);
+    console.log(list);
+}
+        const hasProcessedOnHoldFile = list.some((item) => item.fileStatus === 'Processed' && (item.onHold || item.parentHold) ? true : false);
         
         const processedAndSent = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
         list.some((item) => item.fileStatus === 'Processed' ? true : false) && list.every((item) => item.fileStatus !== 'Planned'? true : false);

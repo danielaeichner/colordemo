@@ -51,7 +51,7 @@ export const getStatusColorV2 = (child) => {
       sentAndPlanned,
       allMixed, hasProcessedOnHoldFile} = child;
   
-    // if(child.id === "4") {
+    // if(child.id === "16") {
     //   console.log(child);
     // }
   
@@ -83,7 +83,7 @@ else {
     if((partialChildrenOnHold || areAllOnHold || onHold) && (processedAndSent || allProcessed)) {
         return objColors.blue;
       }
-
+      
     if((partialChildrenOnHold || areAllOnHold || onHold) && (allMixed || processedAndPlanned)) {
       return objColors.lightblue;
     }

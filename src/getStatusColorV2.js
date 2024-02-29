@@ -51,16 +51,17 @@ export const getStatusColorV2 = (child) => {
       sentAndPlanned,
       allMixed, hasProcessedOnHoldFile} = child;
   
-    // if(child.id === "16") {
-    //   console.log(child);
-    // }
+    if(child.id === "4") {
+      console.log(child);
+    }
   
     const objColors = getColorsV2().objColors;
 
     const isProcessedOnHold = (onHold || areAllOnHold) && (processedAndSent || allProcessed || processedAndPlanned || allMixed);
     
     if(!hasProcessedOnHoldFile && !isProcessedOnHold ) {
-        if(allSent && (areAllOnHold || partialChildrenOnHold)) {
+        if((allSent && (areAllOnHold || partialChildrenOnHold)) || 
+        (processedAndPlanned && partialChildrenOnHold)) {
         return objColors.greenyellow;
         }
     
@@ -68,7 +69,7 @@ export const getStatusColorV2 = (child) => {
         return objColors.green;
         }
     
-        if((partialChildrenOnHold ) && (allPlanned ||sentAndPlanned)) {
+        if((partialChildrenOnHold ) && (allMixed || allPlanned ||sentAndPlanned || processedAndSent)) {
             return objColors.lightyellow;
         }
 

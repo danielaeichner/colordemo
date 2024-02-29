@@ -49,7 +49,7 @@ export const getStatusColorV2 = (child) => {
       processedAndSent,	
       processedAndPlanned,
       sentAndPlanned,
-      allMixed, hasProcessedOnHoldFile, childHold} = child;
+      allMixed, hasProcessedOnHoldFile} = child;
   
     // if(child.id === "4") {
     //   console.log(child);

@@ -68,7 +68,7 @@ export const getStatusColorV2 = (child) => {
         return objColors.green;
         }
     
-        if(partialChildrenOnHold || childHold && (allPlanned ||sentAndPlanned)) {
+        if((partialChildrenOnHold ) && (allPlanned ||sentAndPlanned)) {
             return objColors.lightyellow;
         }
 

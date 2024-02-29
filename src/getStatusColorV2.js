@@ -1,4 +1,5 @@
 
+
 export const getColorsV2 = () => {
     const blue = 'rgb(3, 155, 229)';
     const lightblue = 'rgb(3, 155, 229, 0.3)';
@@ -36,6 +37,7 @@ return {colors, objColors};
 }
 
 
+
 export const getStatusColorV2 = (child) => {
 
     const {  onHold,
@@ -54,8 +56,10 @@ export const getStatusColorV2 = (child) => {
     // }
   
     const objColors = getColorsV2().objColors;
+
+    const isProcessedOnHold = (onHold || areAllOnHold) && (processedAndSent || allProcessed || processedAndPlanned || allMixed);
     
-    if(!hasProcessedOnHoldFile) {
+    if(!hasProcessedOnHoldFile && !isProcessedOnHold ) {
         if(allSent && (areAllOnHold || partialChildrenOnHold)) {
         return objColors.greenyellow;
         }

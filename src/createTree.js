@@ -24,7 +24,7 @@ return{
                     {
                       name: "National -  EARLY NY - E1 - C - 01",
                       id: "6",
-                      fileStatus: "Processed",
+                      fileStatus: "Planned",
                     },
                     {
                       name: "National -  EARLY NY - E1 - C - 02",

@@ -120,12 +120,12 @@ function App() {
       >
         {child.name}{" "}
         <span style={{ fontSize: "0.5em" }}>
-          {child.onHold ? "onHold" : ""}{" "}
+          {/* {child.onHold ? "onHold" : ""}{" "}
           {child.childHold ? " - childHold" : ""}
           {child.parentHold ? " - parentHold" : ""}
           {child.areAllOnHold ? " - areAllOnHold" : ""}
           {child.partialChildrenOnHold ? " - partialChildrenOnHold" : ""}
-          {child.hasProcessedOnHoldFile ? " - hasProcessedOnHoldFile" : ""}
+          {child.hasProcessedOnHoldFile ? " - hasProcessedOnHoldFile" : ""} */}
         </span>
         <button onClick={() => toggleOnHold(child.id)}>
           {child.onHold ? "Unhold" : "Hold"}

@@ -316,7 +316,8 @@ export function setHoldStatus(tree, setTree) {
      
     const newTree = { ...tree };
 
-    const changeElementById = (id, areAllOnHold, partialChildrenOnHold, allPlanned, allProcessed, allSent, processedAndSent, processedAndPlanned, sentAndPlanned, allMixed) => {
+    const changeElementById = (id, areAllOnHold, partialChildrenOnHold, allPlanned, allProcessed, allSent, 
+      processedAndSent, processedAndPlanned, sentAndPlanned, allMixed, hasProcessedOnHoldFile) => {
 
         const updateTree = (tree) => {
             if (tree.id === id) {  
@@ -329,6 +330,7 @@ export function setHoldStatus(tree, setTree) {
                 tree.processedAndPlanned = processedAndPlanned;
                 tree.sentAndPlanned = sentAndPlanned; 
                 tree.allMixed = allMixed;
+                tree.hasProcessedOnHoldFile = hasProcessedOnHoldFile;
             } 
             if (tree.children) {
                 for (let i = 0; i < tree.children.length; i++) {
@@ -352,6 +354,9 @@ export function setHoldStatus(tree, setTree) {
         const allPlanned = list.every((item) => item.fileStatus === 'Planned' ? true : false);
         const allProcessed = list.every((item) => item.fileStatus === 'Processed' ? true : false);
         const allSent = list.every((item) => item.fileStatus === 'Sent' ? true : false);
+        const childHold = list.some((item) => item.childHold ? true : false);
+
+        const hasProcessedOnHoldFile = list.some((item) => item.fileStatus === 'Processed' && item.onHold ? true : false);
         
         const processedAndSent = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
         list.some((item) => item.fileStatus === 'Processed' ? true : false) && list.every((item) => item.fileStatus !== 'Planned'? true : false);
@@ -367,7 +372,7 @@ export function setHoldStatus(tree, setTree) {
         list.some((item) => item.fileStatus === 'Planned' ? true : false);
         
         changeElementById(partialTree.id, areAllOnHold, partialChildrenOnHold,
-            allPlanned, allProcessed, allSent, processedAndSent, processedAndPlanned, sentAndPlanned, allMixed);
+            allPlanned, allProcessed, allSent, processedAndSent, processedAndPlanned, sentAndPlanned, allMixed, hasProcessedOnHoldFile, childHold);
 
     };
 

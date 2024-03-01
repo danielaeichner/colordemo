@@ -1,24 +1,23 @@
 import { useState } from "react";
 import "./App.css";
-import { childHold, parentHold, resetHold, setHoldStatus } from "./childHold";
+import { childHold2, parentHold, resetHold, setHoldStatus} from "./childHold2";
 import { createTree } from "./createTree";
 import {
   getColorsV2,
-  getStatusColorV2,
   getStatusColorSingleV2,
 } from "./getStatusColorV2";
-import {
-  getColorsV1,
-  getStatusColorV1,
-  getStatusColorSingleV1,
-} from "./getStatusColorV1";
+// import {
+//   getColorsV1,
+//   getStatusColorV1,
+//   getStatusColorSingleV1,
+// } from "./getStatusColorV1";
 
 function App() {
   const [list, setList] = useState([]);
 
   const [tree, setTree] = useState(createTree());
 
-  const [version, setVersion] = useState("V2");
+  const [version] = useState("V3");
 
   const handleClick = (parent) => {
     setList([]);
@@ -64,10 +63,19 @@ function App() {
 
     resetHold(newTree, setTree);
 
-    childHold(newTree, setTree);
+    if(version === "V3") {
+      childHold2(newTree, setTree);
+    } 
+    // else {
+    //   childHold(newTree, setTree);
+    // }
+    
     parentHold(newTree, setTree);
 
-    setHoldStatus(newTree, setTree);
+    const updatedTreeData = setHoldStatus(newTree);
+
+
+    setTree(updatedTreeData);
   };
 
   const fileStatusOptions = ["Planned", "Processed", "Sent"];
@@ -92,22 +100,36 @@ function App() {
     const newTree = { ...tree };
     updateTree(newTree);
     setTree(newTree);
-    setHoldStatus(newTree, setTree);
+
+
+    const updatedTreeData = setHoldStatus(newTree);
+
+
+    setTree(updatedTreeData);
   };
 
-  const getBackgroundColorV1 = (child) => {
-    const fileStatus = child.fileStatus
-      ? getStatusColorSingleV1(child.onHold, child.fileStatus, child.parentHold).color
-      : getStatusColorV1(child).color;
+  // const getBackgroundColorV1 = (child) => {
+  //   const fileStatus = child.fileStatus
+  //     ? getStatusColorSingleV1(child.onHold, child.fileStatus, child.parentHold).color
+  //     : getStatusColorV1(child).color;
 
-    return fileStatus;
-  };
+  //   return fileStatus;
+  // };
 
-  const getBackgroundColorV2 = (child) => {
+  // const getBackgroundColorV2 = (child) => {
     
+  //   const fileStatus = child.fileStatus
+  //     ? getStatusColorSingleV2(child.onHold, child.fileStatus, child.parentHold).color
+  //     : getStatusColorV2(child).color;
+
+  //   return fileStatus;
+  // };
+
+  const getBackgroundColorV3 = (child) => {
+    // console.log(child);
     const fileStatus = child.fileStatus
       ? getStatusColorSingleV2(child.onHold, child.fileStatus, child.parentHold).color
-      : getStatusColorV2(child).color;
+      : child.color;
 
     return fileStatus;
   };
@@ -115,15 +137,16 @@ function App() {
   const spanElement = (child, onClickEl) => {
     return (
       <span
-        style={{ backgroundColor: version === "V1" ? getBackgroundColorV1(child) : getBackgroundColorV2(child)}}
+        style={{ backgroundColor: getBackgroundColorV3(child)}}
         onClick={onClickEl ? () => handleClick(child) : undefined}
       >
         {child.name}{" "}
         <span style={{ fontSize: "0.5em" }}>
-          {/* {child.onHold ? "onHold" : ""}{" "}
+          {version === "V3" ? child.colorName : ""}
+          {child.onHold ? "onHold" : ""}
           {child.childHold ? " - childHold" : ""}
           {child.parentHold ? " - parentHold" : ""}
-          {child.areAllOnHold ? " - areAllOnHold" : ""}
+          {/* {child.areAllOnHold ? " - areAllOnHold" : ""}
           {child.partialChildrenOnHold ? " - partialChildrenOnHold" : ""}
           {child.hasProcessedOnHoldFile ? " - hasProcessedOnHoldFile" : ""}
           {child.processedAndPlanned ? " - processedAndPlanned" : ""} */}
@@ -152,7 +175,7 @@ function App() {
     );
   };
 
-  const colors = version === "V1" ? getColorsV1() : getColorsV2();
+  const colors = getColorsV2();
 
   const renderTree = (tree) => {
     return (
@@ -191,21 +214,13 @@ function App() {
     );
   };
 
-  const toggleVersion = () => {
-
-    setVersion(version === "V1" ? "V2" : "V1");
-  }
+ 
 
   return (
     <>
-      <h1>STX Status Colors</h1>
-      <p>
-      <button onClick={() => toggleVersion()}>
-
-          {version} (click here to go to V1)
-        </button>
-      </p>
-     
+      <h1>STX Status Colors - V3</h1>
+      
+      
       {renderBoxes()}
 
       <div className="container" style={{ clear: "both" }}>

@@ -1,3 +1,4 @@
+import { getStatusColorSingleV2,getColorsV2 } from './getStatusColorV2';
 
 export function resetHold(newTree, setTree) {
     newTree.childHold = false;
@@ -70,7 +71,7 @@ export function resetHold(newTree, setTree) {
   }
   
 
-export function childHold(newTree, setTree) {
+export function childHold2(newTree, setTree) {
     
  
   if (newTree.children) {
@@ -316,21 +317,13 @@ export function setHoldStatus(tree) {
      
     const newTree = { ...tree };
 
-    const changeElementById = (id, areAllOnHold, partialChildrenOnHold, allPlanned, allProcessed, allSent, 
-      processedAndSent, processedAndPlanned, sentAndPlanned, allMixed, hasProcessedOnHoldFile) => {
+    const changeElementById = (id, colorItem) => {
 
         const updateTree = (tree) => {
             if (tree.id === id) {  
-                tree.areAllOnHold = areAllOnHold;
-                tree.partialChildrenOnHold = partialChildrenOnHold;
-                tree.allPlanned = allPlanned;
-                tree.allProcessed = allProcessed;
-                tree.allSent    = allSent;
-                tree.processedAndSent = processedAndSent;
-                tree.processedAndPlanned = processedAndPlanned;
-                tree.sentAndPlanned = sentAndPlanned; 
-                tree.allMixed = allMixed;
-                tree.hasProcessedOnHoldFile = hasProcessedOnHoldFile;
+                tree.color = colorItem.color;
+                tree.colorName = colorItem.name;
+                
             } 
             if (tree.children) {
                 for (let i = 0; i < tree.children.length; i++) {
@@ -347,35 +340,76 @@ export function setHoldStatus(tree) {
 
     };
 
+    const getDominantColor = (colorList) => {
+
+        // white < lightyellow < yellow < lightblue < blue < green/yellow < lightgreen < green
+        
+        const hasYellow = colorList.some((color) => color.name === "Yellow");
+        const hasGreenYellow = colorList.some((color) => color.name === "Green Yellow");
+        const hasGreen = colorList.some((color) => color.name === "Green");
+        const hasBlue = colorList.some((color) => color.name === "Blue");
+        
+        const allYellow = colorList.every((color) => color.name === "Yellow");
+        const allGreenYellow = colorList.every((color) => color.name === "Green Yellow");
+        const allGreen = colorList.every((color) => color.name === "Green");
+        const allBlue = colorList.every((color) => color.name === "Blue");
+
+        const objColors = getColorsV2().objColors;
+
+        if(allYellow) {
+            return objColors.yellow;
+        }
+        if(allGreenYellow) {
+            return objColors.greenyellow;
+        }
+
+        if(allGreen) {
+            return objColors.green;
+        }
+
+        if(allBlue) {
+            return objColors.blue;
+        }
+
+        if(hasYellow) {
+            return objColors.lightyellow;
+        }
+
+        if(hasBlue) {
+            return objColors.lightblue;
+        }
+
+        if(hasGreenYellow) {
+            return objColors.greenyellow;
+        }
+
+        if(hasGreen) {
+            return objColors.lightgreen;
+        }
+        return objColors.white;
+    }
+
     const getStatusOfListOfFiles = (partialTree) => {
         const list = getListOfFiles(partialTree); // Fixed function name
-        const areAllOnHold = list.every((item) => item.onHold || item.parentHold? true : false);
-        const partialChildrenOnHold = areAllOnHold? false : list.some((item) => item.onHold || item.parentHold ? true : false);
-        const allPlanned = list.every((item) => item.fileStatus === 'Planned' ? true : false);
-        const allProcessed = list.every((item) => item.fileStatus === 'Processed' ? true : false);
-        const allSent = list.every((item) => item.fileStatus === 'Sent' ? true : false);
-        const childHold = list.some((item) => item.childHold ? true : false);
-// if(partialTree.id === "16") {
 
-//     console.log(list);
-// }
-        const hasProcessedOnHoldFile = list.some((item) => item.fileStatus === 'Processed' && (item.onHold || item.parentHold) ? true : false);
         
-        const processedAndSent = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
-        list.some((item) => item.fileStatus === 'Processed' ? true : false) && list.every((item) => item.fileStatus !== 'Planned'? true : false);
 
-        const processedAndPlanned = list.some((item) => item.fileStatus === 'Processed' ? true : false) && 
-        list.some((item) => item.fileStatus === 'Planned' ? true : false) && list.every((item) => item.fileStatus !== 'Sent'? true : false);
+        const colorList = [];
+        for (let i = 0; i < list.length; i++) {
+            // onHold,  status, parentHold
+            colorList.push(getStatusColorSingleV2(list[i].onHold, list[i].fileStatus, list[i].parentHold));
+        }
 
-        const sentAndPlanned = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
-        list.some((item) => item.fileStatus === 'Planned' ? true : false) && list.every((item) => item.fileStatus !== 'Processed'? true : false);
+        // if(partialTree.id === "4") {
+        // console.log(colorList);
+        // }
+        const partialTreeColor = getDominantColor(colorList);
         
-        const allMixed = list.some((item) => item.fileStatus === 'Sent' ? true : false) && 
-        list.some((item) => item.fileStatus === 'Processed' ? true : false) && 
-        list.some((item) => item.fileStatus === 'Planned' ? true : false);
-        
-        changeElementById(partialTree.id, areAllOnHold, partialChildrenOnHold,
-            allPlanned, allProcessed, allSent, processedAndSent, processedAndPlanned, sentAndPlanned, allMixed, hasProcessedOnHoldFile, childHold);
+        // if(partialTree.id === "4") {
+        //     console.log(partialTreeColor);
+        //     }
+
+        changeElementById(partialTree.id, {color: partialTreeColor.color, name: partialTreeColor.name});
 
     };
 

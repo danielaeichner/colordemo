@@ -411,7 +411,7 @@ describe("getStatusColor", () => {
       allMixed: false,
     };
     const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightyellow);
+    expect(result).toEqual(objColors.greenyellow);
   });
 
   it("status test 11", () => {
@@ -479,7 +479,7 @@ describe("getStatusColor", () => {
       allMixed: true,
     };
     const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightyellow);
+    expect(result).toEqual(objColors.greenyellow);
   });
 
   it("status test 15", () => {

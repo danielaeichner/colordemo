@@ -63,8 +63,12 @@ export const getStatusColorV2 = (child) => {
     const isProcessedOnHold = (onHold || areAllOnHold) && (processedAndSent || allProcessed || processedAndPlanned || allMixed);
     
     if(!hasProcessedOnHoldFile && !isProcessedOnHold ) {
+
+      if((areAllOnHold || onHold) && (allPlanned || sentAndPlanned)) {
+        return objColors.yellow;
+        }
         if((allSent && (areAllOnHold || partialChildrenOnHold)) || 
-        (processedAndPlanned && partialChildrenOnHold)) {
+        ((processedAndPlanned || processedAndSent || allMixed) && partialChildrenOnHold)) {
         return objColors.greenyellow;
         }
     
@@ -72,11 +76,9 @@ export const getStatusColorV2 = (child) => {
         return objColors.green;
         }
 
-        if((areAllOnHold || onHold) && (allPlanned || sentAndPlanned)) {
-          return objColors.yellow;
-          }
+        
     
-        if((partialChildrenOnHold ) && (allMixed || allPlanned ||sentAndPlanned || processedAndSent)) {
+        if(partialChildrenOnHold && (sentAndPlanned || allPlanned)) {
             return objColors.lightyellow;
         }
 

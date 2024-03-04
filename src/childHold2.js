@@ -356,6 +356,9 @@ export function setHoldStatus(tree) {
 
         const objColors = getColorsV2().objColors;
 
+        if(allBlue) {
+          return objColors.blue;
+        }
         if(allYellow) {
             return objColors.yellow;
         }
@@ -367,17 +370,15 @@ export function setHoldStatus(tree) {
             return objColors.green;
         }
 
-        if(allBlue) {
-            return objColors.blue;
-        }
+        if(hasBlue) {
+          return objColors.lightblue;
+      }
 
         if(hasYellow) {
             return objColors.lightyellow;
         }
 
-        if(hasBlue) {
-            return objColors.lightblue;
-        }
+        
 
         if(hasGreenYellow) {
             return objColors.greenyellow;

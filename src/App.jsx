@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { parentHold, resetHold, setHoldStatus} from "./childHold2";
+import { setHoldStatus} from "./childHold2";
 import { createTree } from "./createTree";
 import {
   getColorsV2,
@@ -34,30 +34,38 @@ function App() {
   };
 
   const toggleOnHold = (id) => {
-    const updateTree = (tree) => {
+    const updateTree = (tree, childrenOnHold) => {
+      let allOnHold = childrenOnHold;
       if (tree.id === id) {
         tree.onHold = !tree.onHold;
+        allOnHold = true;
       }
       if (tree.children) {
         for (let i = 0; i < tree.children.length; i++) {
-          updateTree(tree.children[i]);
+          if(allOnHold) {
+            tree.children[i].onHold = tree.onHold;
+          }
+          updateTree(tree.children[i], allOnHold);
         }
       }
       if (tree.list) {
         for (let i = 0; i < tree.list.length; i++) {
-          updateTree(tree.list[i]);
+          if(allOnHold) {
+            tree.list[i].onHold = tree.onHold;
+          }
+          updateTree(tree.list[i], allOnHold);
         }
       }
     };
 
     const newTree = { ...tree };
-    updateTree(newTree);
+    updateTree(newTree, false);
     setTree(newTree);
 
-    resetHold(newTree, setTree);
+   //resetHold(newTree, setTree);
   
     
-    parentHold(newTree, setTree);
+    //parentHold(newTree, setTree);
 
     const updatedTreeData = setHoldStatus(newTree);
 

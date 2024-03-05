@@ -1,23 +1,16 @@
 import { useState } from "react";
 import "./App.css";
-import { childHold2, parentHold, resetHold, setHoldStatus} from "./childHold2";
+import { parentHold, resetHold, setHoldStatus} from "./childHold2";
 import { createTree } from "./createTree";
 import {
   getColorsV2,
   getStatusColorSingleV2,
 } from "./getStatusColorV2";
-// import {
-//   getColorsV1,
-//   getStatusColorV1,
-//   getStatusColorSingleV1,
-// } from "./getStatusColorV1";
 
 function App() {
   const [list, setList] = useState([]);
 
   const [tree, setTree] = useState(createTree());
-
-  const [version] = useState("V3");
 
   const handleClick = (parent) => {
     setList([]);
@@ -62,13 +55,7 @@ function App() {
     setTree(newTree);
 
     resetHold(newTree, setTree);
-
-    if(version === "V3") {
-      childHold2(newTree, setTree);
-    } 
-    // else {
-    //   childHold(newTree, setTree);
-    // }
+  
     
     parentHold(newTree, setTree);
 
@@ -108,48 +95,21 @@ function App() {
     setTree(updatedTreeData);
   };
 
-  // const getBackgroundColorV1 = (child) => {
-  //   const fileStatus = child.fileStatus
-  //     ? getStatusColorSingleV1(child.onHold, child.fileStatus, child.parentHold).color
-  //     : getStatusColorV1(child).color;
-
-  //   return fileStatus;
-  // };
-
-  // const getBackgroundColorV2 = (child) => {
-    
-  //   const fileStatus = child.fileStatus
-  //     ? getStatusColorSingleV2(child.onHold, child.fileStatus, child.parentHold).color
-  //     : getStatusColorV2(child).color;
-
-  //   return fileStatus;
-  // };
-
-  const getBackgroundColorV3 = (child) => {
-    // console.log(child);
-    const fileStatus = child.fileStatus
-      ? getStatusColorSingleV2(child.onHold, child.fileStatus, child.parentHold).color
-      : child.color;
-
-    return fileStatus;
-  };
 
   const spanElement = (child, onClickEl) => {
     return (
       <span
-        style={{ backgroundColor: getBackgroundColorV3(child)}}
+        style={{ backgroundColor: child.fileStatus
+          ? getStatusColorSingleV2(child.onHold, child.fileStatus, child.parentHold).color
+          : child.color}}
         onClick={onClickEl ? () => handleClick(child) : undefined}
       >
         {child.name}{" "}
         <span style={{ fontSize: "0.5em" }}>
-          {version === "V3" ? child.colorName : ""}
+          {child.colorName ? child.colorName : ""}
           {child.onHold ? "onHold" : ""}
-          {child.childHold ? " - childHold" : ""}
+         
           {child.parentHold ? " - parentHold" : ""}
-          {/* {child.areAllOnHold ? " - areAllOnHold" : ""}
-          {child.partialChildrenOnHold ? " - partialChildrenOnHold" : ""}
-          {child.hasProcessedOnHoldFile ? " - hasProcessedOnHoldFile" : ""}
-          {child.processedAndPlanned ? " - processedAndPlanned" : ""} */}
         </span>
         <button onClick={() => toggleOnHold(child.id)}>
           {child.onHold ? "Unhold" : "Hold"}

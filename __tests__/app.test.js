@@ -1,835 +1,714 @@
 import { describe, expect, it } from "@jest/globals";
-import { getStatusColorV2, getColorsV2, getStatusColorSingleV2 } from "../src/getStatusColorV2";
+import { getStatusColorSingleV2, getColorsV2 } from "../src/getStatusColorV2";
+import { setHoldStatus } from "../src/childHold2";
 
-const { objColors } = getColorsV2();
+const objColors = getColorsV2().objColors;
 
-// if a parent is on hold, all children are on hold as well. onhold === areAllOnHold
+// const dummy = {
+//   id: 1,
+//   onHold: false,
+//   parentHold: false,
+//   list: [
+//     {
+//       id: 2,
+//       onHold: true,
+//       parentHold: false,
+//       fileStatus: "Sent",
+//     },
+//     {
+//       id: 4,
+//       onHold: false,
+//       parentHold: false,
+//       fileStatus: "Sent",
+//     },
+//   ],
+// };
 
-const variations = [];
+// const all = [];
+// const ids = [];
 
-const holds = [true, false];
-const fileStatus = [
-  "allPlanned",
-  "allProcessed",
-  "allSent",
-  "processedAndSent",
-  "processedAndPlanned",
-  "sentAndPlanned",
-  "allMixed",
+// for (let index1 = 0; index1 < 2; index1++) {
+  
+//   for (let index2 = 0; index2 < 2; index2++) {
+    
+      
+//       for (let index4 = 0; index4 < 2; index4++) {
+  
+//         for (let index5 = 0; index5 < 2; index5++) {
+//           for (let index6 = 0; index6 < 2; index6++) {
+//             for (let index7 = 0; index7 < 2; index7++) {
+//               for (let index8 = 0; index8 < 3; index8++) {
+//                 for (let index9 = 0; index9 < 3; index9++) {
+
+//                   const id1 = `${index1}${index2}${index6}${index7}${index9}${index4}${index5}${index8}`;
+//                   const id2 = `${index1}${index2}${index4}${index5}${index8}${index6}${index7}${index9}`;
+//                   if(!ids.includes(id1) && !ids.includes(id2)) {
+                    
+                  
+//                   const child = {
+//         id: 1,
+//         onHold: index1 === 0 ? false : true,
+//         parentHold: index2 === 0 ? false : true,
+        
+//         list: [
+
+//           { id: 2,
+//             onHold: index4 === 0 ? false : true,
+//             parentHold: index5 === 0 ? false : true,
+          
+//             fileStatus: index8 === 0 ? "Processed" : index8 === 1 ? "Planned" : "Sent",},
+//           {
+//             id: 3,
+//             onHold: index6 === 0 ? false : true,
+//             parentHold: index7 === 0 ? false : true,
+//             fileStatus: index9 === 0 ? "Processed" : index8 === 1 ? "Planned" : "Sent",},
+          
+//         ]
+//       };
+//       all.push(child);
+//     }
+//     if(!ids.includes(id1)) {
+//       ids.push(id1);
+//     }
+//     if(!ids.includes(id2)) {
+//       ids.push(id2);
+//     }
+
+
+//     }}}}
+//     }}
+  
+//   }
+  
+// }
+
+
+const resultWhite = [
+  {"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Planned"}]},
+];
+const resultBlue = [
+  {"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+];
+const resultYellow = [
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+];
+const resultGreenYellow = [
+  {"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+];
+const resultGreen = [
+
+  {"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+
+];
+const resultLightBlue = [
+  {"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":true,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Sent"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":true,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":true,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Processed"}]},
+];
+const resultLightYellow = [
+  {"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":false,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":false,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Planned"},{"id":3,"onHold":true,"parentHold":true,"fileStatus":"Planned"}]},
+
 ];
 
-for (let index = 0; index < fileStatus.length; index++) {
-  const element = {
-    partialChildrenOnHold: false,
-    areAllOnHold: false,
-    hasProcessedOnHoldFile: false,
-    allPlanned: fileStatus[index] === "allPlanned" ? true : false,
-    allProcessed: fileStatus[index] === "allProcessed" ? true : false,
-    allSent: fileStatus[index] === "allSent" ? true : false,
-    processedAndSent: fileStatus[index] === "processedAndSent" ? true : false,
-    processedAndPlanned:
-      fileStatus[index] === "processedAndPlanned" ? true : false,
-    sentAndPlanned: fileStatus[index] === "sentAndPlanned" ? true : false,
-    allMixed: fileStatus[index] === "allMixed" ? true : false,
-  };
-  for (let k = 0; k < holds.length; k++) {
-    element["partialChildrenOnHold"] = holds[k];
-    for (let m = 0; m < holds.length; m++) {
-      element["areAllOnHold"] = holds[m];
-      for (let p = 0; p < holds.length; p++) {
-        variations.push({ ...element, hasProcessedOnHoldFile: holds[p] });
-      }
+const resultLightGreen = [
+  {"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":false,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":false,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+{"id":1,"onHold":true,"parentHold":true,"list":[{"id":2,"onHold":false,"parentHold":false,"fileStatus":"Processed"},{"id":3,"onHold":false,"parentHold":false,"fileStatus":"Sent"}]},
+]
+
+
+describe("setHoldStatus", () => {
+  it("resultYellow", () => {
+    for (let i = 0; i < resultYellow.length; i++) {
+      const result = setHoldStatus(resultYellow[i]);
+      expect(result.colorName).toEqual("Yellow");
     }
-  }
-}
-
-const impossibleVariations = [];
-const possibleVariations = [];
-
-for (let index = 0; index < variations.length; index++) {
-  if (
-    variations[index].allProcessed &&
-    !variations[index].hasProcessedOnHoldFile
-  ) {
-    impossibleVariations.push(variations[index]);
-  } else if (
-    variations[index].hasProcessedOnHoldFile &&
-    variations[index].allSent
-  ) {
-    impossibleVariations.push(variations[index]);
-  } else if (
-    variations[index].hasProcessedOnHoldFile &&
-    variations[index].allPlanned
-  ) {
-    impossibleVariations.push(variations[index]);
-  } else if (
-    variations[index].hasProcessedOnHoldFile &&
-    variations[index].sentAndPlanned
-  ) {
-    impossibleVariations.push(variations[index]);
-  } else if (
-    variations[index].hasProcessedOnHoldFile &&
-    !variations[index].partialChildrenOnHold &&
-    !variations[index].areAllOnHold
-  ) {
-    impossibleVariations.push(variations[index]);
-  } else if (
-    variations[index].areAllOnHold &&
-    variations[index].processedAndSent &&
-    !variations[index].hasProcessedOnHoldFile
-  ) {
-    impossibleVariations.push(variations[index]);
-  } else {
-    possibleVariations.push(variations[index]);
-  }
-}
-// const uniqueImpossibleVariations = [...new Set(impossibleVariations)];
-
-console.log(impossibleVariations);
-console.log(possibleVariations.length);
-
-describe ("getStatusColorSingleV2", () => {
-  // Processed, Planned, Sent
+  });
+  it("resultGreenYellow", () => {
+    for (let i = 0; i < resultGreenYellow.length; i++) {
+      const result = setHoldStatus(resultGreenYellow[i]);
+      expect(result.colorName).toEqual("Green Yellow");
+    }
+  });
+  it("resultBlue", () => {
+    for (let i = 0; i < resultBlue.length; i++) {
+      const result = setHoldStatus(resultBlue[i]);
+      expect(result.colorName).toEqual("Blue");
+    }
+  });
+  it("resultGreen", () => {
+    for (let i = 0; i < resultGreen.length; i++) {
+      const result = setHoldStatus(resultGreen[i]);
+      expect(result.colorName).toEqual("Green");
+    }
+  });
+  it("resultLightBlue", () => {
+    for (let i = 0; i < resultLightBlue.length; i++) {
+      const result = setHoldStatus(resultLightBlue[i]);
+      expect(result.colorName).toEqual("Light Blue");
+    }
+  });
+  it("LightYellow", () => {
+    for (let i = 0; i < resultLightYellow.length; i++) {
+      const result = setHoldStatus(resultLightYellow[i]);
+      expect(result.colorName).toEqual("Light Yellow");
+    }
+  });
+  it("white", () => {
+    for (let i = 0; i < resultWhite.length; i++) {
+      const result = setHoldStatus(resultWhite[i]);
+      expect(result.colorName).toEqual("White");
+    }
+  });
+  it("resultLightGreen", () => {
+    for (let i = 0; i < resultLightGreen.length; i++) {
+      const result = setHoldStatus(resultLightGreen[i]);
+      expect(result.colorName).toEqual("Light Green");
+    }
+  });
   it("test 1", () => {
-    const child = {
-      onHold: true,
-      parentHold: true,
-      status: "Processed",
+    const tree = {
+      id: 1,
+      onHold: false,
+      parentHold: false,
+   
+      list: [
+        {
+          id: 2,
+          onHold: true,
+          parentHold: false,
+          fileStatus: "Processed",
+        },
+        {
+          id: 4,
+          onHold: false,
+          parentHold: false,
+          fileStatus: "Planned",
+        },
+      ],
     };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.blue);
+    const result = setHoldStatus(tree);
+    expect(result).toEqual({
+      id: 1,
+      onHold: false,
+      parentHold: false,
+
+      colorName: "Light Blue",
+      color: "rgb(3, 155, 229, 0.3)",
+      list: [
+        {
+          id: 2,
+          onHold: true,
+          parentHold: false,
+          fileStatus: "Processed",
+        },
+        {
+          id: 4,
+          onHold: false,
+          parentHold: false,
+          fileStatus: "Planned",
+        },
+      ],
+    });
   });
 
   it("test 2", () => {
-    const child = {
-      onHold: false,
-      parentHold: true,
-      status: "Processed",
-    };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.blue);
-  });
-
-  it("test 3", () => {
-    const child = {
-      onHold: true,
-      parentHold: false,
-      status: "Processed",
-    };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.blue);
-  });
-
-  it("test 4", () => {
-    const child = {
+    const tree = {
+      id: 1,
       onHold: false,
       parentHold: false,
-      status: "Processed",
+
+      list: [
+        {
+          id: 2,
+          onHold: true,
+          parentHold: false,
+          fileStatus: "Sent",
+        },
+        {
+          id: 4,
+          onHold: false,
+          parentHold: false,
+          fileStatus: "Sent",
+        },
+      ],
     };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.white);
+    const result = setHoldStatus(tree);
+    expect(result.colorName).toEqual("Green Yellow");
   });
-
-
-  // Processed, Planned, Sent
-  it("test 1", () => {
-    const child = {
-      onHold: true,
-      parentHold: true,
-      status: "Planned",
-    };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.yellow);
-  });
-
-  it("test 2", () => {
-    const child = {
-      onHold: false,
-      parentHold: true,
-      status: "Planned",
-    };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.yellow);
-  });
-
-  it("test 3", () => {
-    const child = {
-      onHold: true,
-      parentHold: false,
-      status: "Planned",
-    };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.yellow);
-  });
-
-  it("test 4", () => {
-    const child = {
-      onHold: false,
-      parentHold: false,
-      status: "Planned",
-    };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.white);
-  });
-
-  // Processed, Planned, Sent
-  it("test 1", () => {
-    const child = {
-      onHold: true,
-      parentHold: true,
-      status: "Sent",
-    };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.greenyellow);
-  });
-
-  it("test 2", () => {
-    const child = {
-      onHold: false,
-      parentHold: true,
-      status: "Sent",
-    };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.greenyellow);
-  });
-
-  it("test 3", () => {
-    const child = {
-      onHold: true,
-      parentHold: false,
-      status: "Sent",
-    };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.greenyellow);
-  });
-
-  it("test 4", () => {
-    const child = {
-      onHold: false,
-      parentHold: false,
-      status: "Sent",
-    };
-    const result = getStatusColorSingleV2(child.onHold, child.status, child.parentHold);
-    expect(result).toEqual(objColors.green);
-  });
-
+  
 });
 
-describe("getStatusColor", () => {
-
-  // for (let index = 0; index < impossibleVariations.length; index++) {
-  //   it(`loop ${index}`, () => {
-  //     const result = getStatusColorV2(impossibleVariations[index]);
-  //   expect(result).toEqual(objColors.white);
-  // });
-    
-  //}
-  // impossible statuses. They should return the lowest status
-
-  // it("impossible 1", () => {
-  //   const child = {
-  //     partialChildrenOnHold: true,
-  //     areAllOnHold: true,
-  //     hasProcessedOnHoldFile: true,
-  //     allPlanned: true,
-  //     allProcessed: false,
-  //     allSent: false,
-  //     processedAndSent: false,
-  //     processedAndPlanned: false,
-  //     sentAndPlanned: false,
-  //     allMixed: false,
-  //   };
-  //   const result = getStatusColorV2(child);
-  //   expect(result).toEqual(objColors.yellow);
-  // });
-
-  // possible statuses
-  it("status test 1", () => {
+describe("getStatusColorSingleV2", () => {
+  // Processed, Planned, Sent
+  it("test 1", () => {
     const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: true,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
+      onHold: true,
+      parentHold: true,
+      status: "Processed",
     };
-    const result = getStatusColorV2(child);
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
+    expect(result).toEqual(objColors.blue);
+  });
+
+  it("test 2", () => {
+    const child = {
+      onHold: false,
+      parentHold: true,
+      status: "Processed",
+    };
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
+    expect(result).toEqual(objColors.blue);
+  });
+
+  it("test 3", () => {
+    const child = {
+      onHold: true,
+      parentHold: false,
+      status: "Processed",
+    };
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
+    expect(result).toEqual(objColors.blue);
+  });
+
+  it("test 4", () => {
+    const child = {
+      onHold: false,
+      parentHold: false,
+      status: "Processed",
+    };
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
     expect(result).toEqual(objColors.white);
   });
 
-  it("status test 2", () => {
+  // Processed, Planned, Sent
+  it("test 1", () => {
     const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: true,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
+      onHold: true,
+      parentHold: true,
+      status: "Planned",
     };
-    const result = getStatusColorV2(child);
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
+    expect(result).toEqual(objColors.yellow);
+  });
+
+  it("test 2", () => {
+    const child = {
+      onHold: false,
+      parentHold: true,
+      status: "Planned",
+    };
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
+    expect(result).toEqual(objColors.yellow);
+  });
+
+  it("test 3", () => {
+    const child = {
+      onHold: true,
+      parentHold: false,
+      status: "Planned",
+    };
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
+    expect(result).toEqual(objColors.yellow);
+  });
+
+  it("test 4", () => {
+    const child = {
+      onHold: false,
+      parentHold: false,
+      status: "Planned",
+    };
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
     expect(result).toEqual(objColors.white);
   });
 
-  it("status test 3", () => {
+  // Processed, Planned, Sent
+  it("test 1", () => {
     const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: true,
-      sentAndPlanned: false,
-      allMixed: false,
+      onHold: true,
+      parentHold: true,
+      status: "Sent",
     };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.white);
-  });
-
-  it("status test 4", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: true,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightgreen);
-  });
-
-  it("status test 5", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: true,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightgreen);
-  });
-
-  it("status test 6", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: true,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightgreen);
-  });
-
-  it("status test 7", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: true,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
     expect(result).toEqual(objColors.greenyellow);
   });
 
-  it("status test 8", () => {
+  it("test 2", () => {
     const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: true,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
+      onHold: false,
+      parentHold: true,
+      status: "Sent",
     };
-    const result = getStatusColorV2(child);
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
     expect(result).toEqual(objColors.greenyellow);
   });
 
-  it("status test 9", () => {
+  it("test 3", () => {
     const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: true,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
+      onHold: true,
+      parentHold: false,
+      status: "Sent",
     };
-    const result = getStatusColorV2(child);
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
+    expect(result).toEqual(objColors.greenyellow);
+  });
+
+  it("test 4", () => {
+    const child = {
+      onHold: false,
+      parentHold: false,
+      status: "Sent",
+    };
+    const result = getStatusColorSingleV2(
+      child.onHold,
+      child.status,
+      child.parentHold
+    );
     expect(result).toEqual(objColors.green);
-  });
-
-  it("status test 10 - partialChildrenOnHold, processedAndSent", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: true,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.greenyellow);
-  });
-
-  it("status test 11", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: true,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightyellow);
-  });
-
-  it("status test 12 - partialChildrenOnHold, processedAndPlanned ", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: true,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.greenyellow);
-  });
-
-  it("status test 13", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: true,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightyellow);
-  });
-
-  it("status test 14 - partialChildrenOnHold, allMixed", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: true,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.greenyellow);
-  });
-
-  it("status test 15", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: true,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightblue);
-  });
-
-  it("status test 16", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: true,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightblue);
-  });
-
-  it("status test 17", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: false,
-      allPlanned: true,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.yellow);
-  });
-
-  it("status test 18", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: true,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.yellow);
-  });
-
-  it("status test 19", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: true,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightblue);
-  });
-
-  it("status test 20", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: true,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightblue);
-  });
-
-  it("status test 21", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: true,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightblue);
-  });
-
-  it("status test 22", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: true,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightblue);
-  });
-
-  it("status test 23", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: true,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.blue);
-  });
-
-  it("status test 24", () => {
-    const child = {
-      partialChildrenOnHold: false,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: true,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.blue);
-  });
-
-  it("status test 25", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: true,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.blue);
-  });
-
-  it("status test 26", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: false,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: true,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.blue);
-  });
-
-  it("status test 27", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: false,
-      allPlanned: true,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.yellow);
-  });
-  it("status test 28", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: true,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.blue);
-  });
-  it("status test 29", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: true,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.greenyellow);
-  });
-  it("status test 30", () => {
-    const child = {
-      artialChildrenOnHold: true,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: true,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.blue);
-  });
-
-  it("status test 31", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: true,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightblue);
-  });
-  it("status test 32", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: true,
-      sentAndPlanned: false,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightblue);
-  });
-
-  it("status test 33", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: true,
-      allMixed: false,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.yellow);
-  });
-  it("status test 34", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: true,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: true,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightblue);
-  });
-  it("status test 35", () => {
-    const child = {
-      partialChildrenOnHold: true,
-      areAllOnHold: true,
-      hasProcessedOnHoldFile: false,
-      allPlanned: false,
-      allProcessed: false,
-      allSent: false,
-      processedAndSent: false,
-      processedAndPlanned: false,
-      sentAndPlanned: false,
-      allMixed: true,
-    };
-    const result = getStatusColorV2(child);
-    expect(result).toEqual(objColors.lightblue);
   });
 });

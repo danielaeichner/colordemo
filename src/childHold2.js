@@ -1,11 +1,11 @@
 import { getStatusColorSingleV2,getColorsV2 } from './getStatusColorV2';
 
 export function resetHold(newTree, setTree) {
-    newTree.childHold = false;
+    
         newTree.parentHold = false;
     if (newTree.children) {
       for (let level1 = 0; level1 < newTree.children.length; level1++) {
-        newTree.children[level1].childHold = false;
+        
         newTree.children[level1].parentHold = false;
 
         if (newTree.children[level1].children) {
@@ -15,7 +15,7 @@ export function resetHold(newTree, setTree) {
             level2++
           ) {
 
-            newTree.children[level1].children[level2].childHold = false;
+           
             newTree.children[level1].children[level2].parentHold = false;
 
             if (newTree.children[level1].children[level2].children) {
@@ -26,7 +26,7 @@ export function resetHold(newTree, setTree) {
                 level3++
               ) {
 
-                newTree.children[level1].children[level2].children[level3].childHold = false;
+                
                 newTree.children[level1].children[level2].children[level3].parentHold = false;
 
                 if (
@@ -40,7 +40,7 @@ export function resetHold(newTree, setTree) {
                       .children.length;
                     level4++
                   ) {
-                    newTree.children[level1].children[level2].children[level3].children[level4].childHold = false;
+                    
                     newTree.children[level1].children[level2].children[level3].children[level4].parentHold = false;
 
                     if (
@@ -54,7 +54,7 @@ export function resetHold(newTree, setTree) {
                           .children[level4].list.length;
                         level5++
                       ) {
-                        newTree.children[level1].children[level2].children[level3].children[level4].list[level5].childHold = false;
+                       
                         newTree.children[level1].children[level2].children[level3].children[level4].list[level5].parentHold = false;
                         
                       }
@@ -69,139 +69,6 @@ export function resetHold(newTree, setTree) {
     }
     setTree(newTree);
   }
-  
-
-export function childHold2(newTree, setTree) {
-    
- 
-  if (newTree.children) {
-    for (let level1 = 0; level1 < newTree.children.length; level1++) {
-
-        
-        if (
-            newTree.children[level1].onHold
-          ) {
-            // all the parents need also be on hold
-            newTree.childHold = true;
-            
-          }
-          
-           
-      if (newTree.children[level1].children) {
-        for (
-          let level2 = 0;
-          level2 < newTree.children[level1].children.length;
-          level2++
-        ) {
-            
-            if (
-                newTree.children[level1].children[level2].onHold
-              ) {
-                // all the parents need also be on hold
-                
-                newTree.children[level1].childHold = true;
-                newTree.childHold = true;
-              }
-             
-          if (newTree.children[level1].children[level2].children) {
-            for (
-              let level3 = 0;
-              level3 <
-              newTree.children[level1].children[level2].children.length;
-              level3++
-            ) {
-                
-
-                if (
-                    newTree.children[level1].children[level2].children[
-                      level3
-                    ].onHold
-                  ) {
-                    // all the parents need also be on hold
-                    
-                    
-                    newTree.children[level1].children[
-                      level2
-                    ].childHold = true;
-                    newTree.children[level1].childHold = true;
-                    newTree.childHold = true;
-                  }
-                 
-
-              if (
-                newTree.children[level1].children[level2].children[level3]
-                  .children
-              ) {
-                for (
-                  let level4 = 0;
-                  level4 <
-                  newTree.children[level1].children[level2].children[level3]
-                    .children.length;
-                  level4++
-                ) {
-                   
-                    if (
-                        newTree.children[level1].children[level2].children[
-                          level3
-                        ].children[level4].onHold
-                      ) {
-                        // all the parents need also be on hold
-                        
-                        newTree.children[level1].children[level2].children[
-                          level3
-                        ].childHold = true;
-                        newTree.children[level1].children[
-                          level2
-                        ].childHold = true;
-                        newTree.children[level1].childHold = true;
-                        newTree.childHold = true;
-                      }
-                     
-
-                  if (
-                    newTree.children[level1].children[level2].children[level3]
-                      .children[level4].list
-                  ) {
-                    for (
-                      let level5 = 0;
-                      level5 <
-                      newTree.children[level1].children[level2].children[level3]
-                        .children[level4].list.length;
-                      level5++
-                    ) {
-                        
-                      if (
-                        newTree.children[level1].children[level2].children[
-                          level3
-                        ].children[level4].list[level5].onHold
-                      ) {
-                        
-                        
-                        newTree.children[level1].children[level2].children[
-                          level3
-                        ].children[level4].childHold = true;
-                        newTree.children[level1].children[level2].children[
-                          level3
-                        ].childHold = true;
-                        newTree.children[level1].children[
-                          level2
-                        ].childHold = true;
-                        newTree.children[level1].childHold = true;
-                        newTree.childHold = true;
-                      }
-                      
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  setTree(newTree);
-}
 
 
 
@@ -342,7 +209,7 @@ export function setHoldStatus(tree) {
 
     const getDominantColor = (colorList) => {
 
-        // white < lightyellow < yellow < lightblue < blue < green/yellow < lightgreen < green
+        // white < lightblue < blue < lightyellow < yellow  < green/yellow < lightgreen < green
         
         const hasYellow = colorList.some((color) => color.name === "Yellow");
         const hasGreenYellow = colorList.some((color) => color.name === "Green Yellow");
@@ -377,9 +244,6 @@ export function setHoldStatus(tree) {
         if(hasYellow) {
             return objColors.lightyellow;
         }
-
-        
-
         if(hasGreenYellow) {
             return objColors.greenyellow;
         }
@@ -397,7 +261,7 @@ export function setHoldStatus(tree) {
 
         const colorList = [];
         for (let i = 0; i < list.length; i++) {
-            // onHold,  status, parentHold
+           
             colorList.push(getStatusColorSingleV2(list[i].onHold, list[i].fileStatus, list[i].parentHold));
         }
 
@@ -433,7 +297,7 @@ export function setHoldStatus(tree) {
    getStatusOfListOfFiles(tree);
     
       allOnHold(tree);
-      // console.log(newTree);
+      // console.log(JSON.stringify(newTree));
   return newTree;
 
 }

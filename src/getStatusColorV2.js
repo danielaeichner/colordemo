@@ -40,11 +40,11 @@ return {colors, objColors};
 
 
 
-export const getStatusColorSingleV2 = (onHold,  status, parentHold ) => {
+export const getStatusColorSingleV2 = (onHold,  status ) => {
 
     const objColors = getColorsV2().objColors;
 
-    if(status === 'Sent' && (onHold || parentHold)) {
+    if(status === 'Sent' && onHold) {
       return objColors.greenyellow;
     }
   
@@ -55,11 +55,11 @@ export const getStatusColorSingleV2 = (onHold,  status, parentHold ) => {
       return objColors.red;
     }
   
-    if(status === 'Processed' && (onHold || parentHold)) {
+    if(status === 'Processed' && onHold) {
       return objColors.blue;
     }
   
-    if(status === 'Planned' && (onHold || parentHold)) {
+    if(status === 'Planned' && onHold) {
       return objColors.yellow;
     }
 
